@@ -1,5 +1,7 @@
 package players;
 
+import playersgamepositions.PlayersInGameContext;
+
 public class RedPlayer implements Player{
     private final String name = "Red";
     private final int startIndex = 0;
@@ -7,6 +9,13 @@ public class RedPlayer implements Player{
     private final int tailEndIndex = 20;
     private final String colorCode = "\u001B[31m"; //Red colour.
 
+
+
+    //Holding a Players state and behaviour
+    //private final PlayersInGameContext playerContext;
+
+    public RedPlayer(){
+    }
     @Override
     public String getName() {
         return name;
@@ -19,7 +28,6 @@ public class RedPlayer implements Player{
     public int getTailStartIndex() {
         return tailStartIndex;
     }
-
     @Override
     public int getTailEndIndex() {
         return tailEndIndex;

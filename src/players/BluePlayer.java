@@ -7,6 +7,9 @@ public class BluePlayer implements Player {
     private final int tailEndIndex = 12;
     private final String colorCode = "\u001B[34m"; //Blue colour.
 
+    public BluePlayer(){
+    }
+
     @Override
     public String getName() {
         return name;
