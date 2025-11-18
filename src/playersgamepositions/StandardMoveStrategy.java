@@ -41,7 +41,7 @@ public class StandardMoveStrategy implements MoveStrategy {
         if (!hitStrategy.canMoveToPosition(player, proposedIndex, allPlayers)) {
             context.increaseMoveCount();
             for (GameListener listener : listeners) {
-                listener.onBlockedMove(player, proposedIndex, roll);
+                listener.onBlockedMove(player, context, proposedIndex, roll);
             }
             return;
         }
@@ -56,11 +56,11 @@ public class StandardMoveStrategy implements MoveStrategy {
         if (endStrategy.hasReachedEnd(player, proposedIndex)) {
             int overshoot = endStrategy.calculateOvershoot(player, proposedIndex);
             for (GameListener listener : listeners) {
-                listener.onEndReached(player, proposedIndex, overshoot);
+                listener.onEndReached(player, context, proposedIndex, overshoot);
             }
         } else {
             for (GameListener listener : listeners) {
-                listener.onSuccessfulMove(player, currentIndex, proposedIndex, roll);
+                listener.onSuccessfulMove(player, context, currentIndex, proposedIndex, roll);
             }
         }
     }

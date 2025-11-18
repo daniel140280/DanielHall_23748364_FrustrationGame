@@ -2,25 +2,24 @@ package runsimulations;
 
 import board.BoardEnums;
 import board.GameBoard;
-import boardfactory.GameBoardFactory;
 import dice.DiceEnums;
 import dice.DiceShaker;
-import dice.RandomDoubleDiceShaker;
 import gameobserver.GameListener;
-import gameobserver.ObserverConsoleLogger;
+import gamesimulationsetup.BasicTwoPlayerSimulation;
+import gamesimulationsetup.GameSimulationFactory;
 import gamestrategies.EndStrategy;
-import gamestrategies.HitStrategy;
-import gamestrategies.RuleSet;
 import gamestrategies.endimplementations.ExactEndStrategy;
 import gamestrategies.endimplementations.OvershootAllowedStrategy;
+import gamestrategies.HitStrategy;
 import gamestrategies.hitimplementations.AllowHitStrategy;
 import gamestrategies.hitimplementations.ForfeitOnHitStrategy;
-import players.BluePlayer;
+import gamestrategies.RuleSet;
 import players.Player;
-import players.RedPlayer;
+import players.PlayerEnums;
 import rungame.GameEngine;
 
 import java.util.List;
+
 
 public class RunGameSimulations {
     /*
@@ -29,23 +28,21 @@ public class RunGameSimulations {
     public void runAllGameSimulations(){
 
         System.out.println("Basic game - 2 players, 2 dice, small gameboard. End does not need to be exact, and Hit is allowed.");
-        // 1. RuleSet
-        RuleSet ruleSet = new RuleSet(false, true);
+        System.out.println("Running: Basic 2-player game with double dice, small board, hit allowed, overshoot allowed.");
 
-        // 2. Strategies
-        HitStrategy hitStrategy = ruleSet.allowsPlayerHit() ? new AllowHitStrategy() : new ForfeitOnHitStrategy();
-        EndStrategy endStrategy = ruleSet.requireExactEnd() ? new ExactEndStrategy() : new OvershootAllowedStrategy();
+        GameSimulationFactory factory = new BasicTwoPlayerSimulation();
 
-        // 3. Game setup
-        Player[] players = new Player[]{new RedPlayer(), new BluePlayer()};
-        GameBoard board = GameBoardFactory.createBoard(BoardEnums.SMALL);
-        DiceShaker dice = new RandomDoubleDiceShaker();
-        List<GameListener> listeners = List.of(new ObserverConsoleLogger());
+        Player[] players = factory.createPlayers(PlayerEnums.TWO_PLAYER);
+        GameBoard board = factory.createBoard(BoardEnums.SMALL);
+        DiceShaker dice = factory.createDice(DiceEnums.DOUBLE);
+        RuleSet rules = factory.defineRules();
+        List<GameListener> listeners = factory.setupListeners();
 
-        // 4. Run game
+        HitStrategy hitStrategy = rules.allowsPlayerHit() ? new AllowHitStrategy() : new ForfeitOnHitStrategy();
+        EndStrategy endStrategy = rules.requireExactEnd() ? new ExactEndStrategy() : new OvershootAllowedStrategy();
+
         GameEngine engine = new GameEngine(players, board, dice, hitStrategy, endStrategy, listeners);
         engine.playGame();
-
 
 
     }

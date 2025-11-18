@@ -60,7 +60,9 @@ public class GameEngine {
         }
 
         // Notify listeners
-        listeners.forEach(l -> l.onGameOver(players));
+        for (GameListener listener : listeners) {
+            listener.onGameOver(players, playerContexts);
+        }
     }
 
 }
