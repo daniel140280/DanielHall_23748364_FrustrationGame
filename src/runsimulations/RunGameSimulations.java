@@ -1,49 +1,50 @@
 package runsimulations;
 
-import board.BoardEnums;
-import board.GameBoard;
-import dice.DiceEnums;
-import dice.DiceShaker;
-import gameobserver.GameListener;
-import gamesimulationsetup.BasicTwoPlayerSimulation;
 import gamesimulationsetup.GameSimulationFactory;
-import gamestrategies.EndStrategy;
-import gamestrategies.endimplementations.ExactEndStrategy;
-import gamestrategies.endimplementations.OvershootAllowedStrategy;
-import gamestrategies.HitStrategy;
-import gamestrategies.hitimplementations.AllowHitStrategy;
-import gamestrategies.hitimplementations.ForfeitOnHitStrategy;
-import gamestrategies.RuleSet;
-import players.Player;
-import players.PlayerEnums;
+
+import rungame.GameConfiguration;
 import rungame.GameEngine;
 
 import java.util.List;
 
-
+/*
+The method is a facade factory method, bringing all the Game set-up requirements together to run the various Game Simulations.
+Transparent declaration of options.
+Uses gateways/adapters to build configuration.
+ */
 public class RunGameSimulations {
-    /*
-    The method is a factory method, bringing all the Game set-up requirements together to run the various Game Simulations.
-     */
+
     public void runAllGameSimulations(){
 
-        System.out.println("Basic game - 2 players, 2 dice, small gameboard. End does not need to be exact, and Hit is allowed.");
-        System.out.println("Running: Basic 2-player game with double dice, small board, hit allowed, overshoot allowed.");
+        System.out.println("Running: Basic 2-players, 2-dice, small board game. Player hits allowed. End does note need to be exact.");
 
-        GameSimulationFactory factory = new BasicTwoPlayerSimulation();
+        // Transparent declaration: "this is what I want"
+        PlayerOption playersOpt = PlayerOption.TWO;
+        DiceOption diceOpt = DiceOption.TWO;
+        BoardOption boardOpt = BoardOption.SMALL;
+        EndOption endOpt = EndOption.OVERSHOOT_ALLOWED;
+        HitOption hitOpt = HitOption.ALLOW;
 
-        Player[] players = factory.createPlayers(PlayerEnums.TWO_PLAYER);
-        GameBoard board = factory.createBoard(BoardEnums.SMALL);
-        DiceShaker dice = factory.createDice(DiceEnums.DOUBLE);
-        RuleSet rules = factory.defineRules();
-        List<GameListener> listeners = factory.setupListeners();
+        // Gateway dispatch
+        Player[] players = PlayerFactoryGateway.createPlayers(playersOpt);
+        GameBoard board = BoardFactoryGateway.createBoard(boardOpt);
+        DiceShaker dice = DiceFactoryGateway.createDice(diceOpt);
+        EndStrategy endStrategy = EndFactoryGateway.createEndStrategy(endOpt);
+        HitStrategy hitStrategy = HitFactoryGateway.createHitStrategy(hitOpt);
+        List<GameListener> listeners = List.of(new ObserverConsoleLogger());
 
-        HitStrategy hitStrategy = rules.allowsPlayerHit() ? new AllowHitStrategy() : new ForfeitOnHitStrategy();
-        EndStrategy endStrategy = rules.requireExactEnd() ? new ExactEndStrategy() : new OvershootAllowedStrategy();
+        // Single configuration passed to engine
+        GameConfiguration config = new GameConfiguration(players, board, dice, endStrategy, hitStrategy, listeners);
 
-        GameEngine engine = new GameEngine(players, board, dice, hitStrategy, endStrategy, listeners);
+        GameEngine engine = new GameEngine(config);
         engine.playGame();
 
 
+        GameSimulationFactory factory = new BasicTwoPlayerSimulation();
+        GameConfiguration config = factory.createConfiguration();
+
+        GameEngine engine = new GameEngine(config);
+
+        engine.playGame();
     }
 }

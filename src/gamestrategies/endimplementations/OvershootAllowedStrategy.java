@@ -3,6 +3,10 @@ package gamestrategies.endimplementations;
 import gamestrategies.EndStrategy;
 import players.Player;
 
+/**
+ * OvershootAllowedStrategy lets players finish even if they roll past their tail end.
+ */
+
 public class OvershootAllowedStrategy implements EndStrategy {
     @Override
     public boolean hasReachedEnd(Player player, int currentIndex) {

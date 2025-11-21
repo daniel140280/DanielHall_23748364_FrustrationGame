@@ -60,6 +60,5 @@ public class ObserverConsoleLogger implements GameListener{
             System.out.println("Final position: " + context.getPlayersPosition());
             System.out.println("Move history: " + context.getPlayersHistory().getAllMoves());
         }
-
     }
 }

@@ -1,48 +1,42 @@
-package gamesimulationsetup;
-
-import board.BoardEnums;
-import board.GameBoard;
-import boardfactory.GameBoardFactory;
-import dice.DiceEnums;
-import dice.DiceShaker;
-import dice.RandomDoubleDiceShaker;
-import gameobserver.GameListener;
-import gameobserver.ObserverConsoleLogger;
-import gamestrategies.RuleSet;
-import players.BluePlayer;
-import players.Player;
-import players.PlayerEnums;
-import players.RedPlayer;
-
-import java.util.List;
-
-public class BasicTwoPlayerSimulation implements GameSimulationFactory {
-    @Override
-    public Player[] createPlayers(PlayerEnums playerType) {
-        if (playerType == PlayerEnums.TWO_PLAYER) {
-            return new Player[]{new RedPlayer(), new BluePlayer()};
-        }
-        throw new UnsupportedOperationException("Only TWO_PLAYER supported in this simulation.");
-    }
-
-    @Override
-    public GameBoard createBoard(BoardEnums boardSize) {
-        return GameBoardFactory.createBoard(boardSize);
-    }
-
-    @Override
-    public DiceShaker createDice(DiceEnums diceType) {
-        return new RandomDoubleDiceShaker();
-    }
-
-    @Override
-    public RuleSet defineRules() {
-        return new RuleSet(false, true); // Not exact end, hit allowed
-    }
-
-    @Override
-    public List<GameListener> setupListeners() {
-        return List.of(new ObserverConsoleLogger()); // Will be updated to accept context if needed
-    }
-
-}
+//package gamesimulationsetup;
+//
+//import board.BoardEnums;
+//import board.GameBoard;
+//import boardfactory.GameBoardFactory;
+//import dice.DiceEnums;
+//import dice.DiceShaker;
+//import dice.RandomDoubleDiceShaker;
+//import gameobserver.GameListener;
+//import gameobserver.ObserverConsoleLogger;
+//import gamestrategies.EndStrategy;
+//import gamestrategies.HitStrategy;
+//import gamestrategies.RuleSet;
+//import gamestrategies.endimplementations.ExactEndStrategy;
+//import gamestrategies.endimplementations.OvershootAllowedStrategy;
+//import gamestrategies.hitimplementations.AllowHitStrategy;
+//import gamestrategies.hitimplementations.ForfeitOnHitStrategy;
+//import players.BluePlayer;
+//import players.Player;
+//import players.PlayerEnums;
+//import players.RedPlayer;
+//import rungame.GameConfiguration;
+//
+//import java.util.List;
+//
+//public class BasicTwoPlayerSimulation implements GameSimulationFactory {
+//    @Override
+//    public GameConfiguration createConfiguration() {
+//        Player[] players = new Player[]{new RedPlayer(), new BluePlayer()};
+//        //GameBoard board = GameBoardFactory.createBoard(BoardEnums.SMALL);
+//        DiceShaker dice = new RandomDoubleDiceShaker();
+//        RuleSet rules = new RuleSet(false, true); // not exact end, hit allowed
+//        List<GameListener> listeners = List.of(new ObserverConsoleLogger());
+//
+//        HitStrategy hitStrategy = rules.allowsPlayerHit() ? new AllowHitStrategy() : new ForfeitOnHitStrategy();
+//        EndStrategy endStrategy = rules.requireExactEnd() ? new ExactEndStrategy() : new OvershootAllowedStrategy();
+//
+//        return new GameConfiguration(players, board, dice, hitStrategy, endStrategy, listeners);
+//    }
+//
+//
+//}
