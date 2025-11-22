@@ -2,6 +2,7 @@ package rungame;
 
 import board.GameBoard;
 import dice.DiceShaker;
+import gameconfig.*;
 import gameobserver.GameListener;
 import gamestrategies.EndStrategy;
 import gamestrategies.HitStrategy;
@@ -53,6 +54,15 @@ public class GameEngine {
         );
     }
 
+    public GameEngine(PlayerOption playerOpt,
+                      DiceOption diceOpt,
+                      BoardOption boardOpt,
+                      HitOption hitOpt,
+                      EndOption endOpt,
+                      List<GameListener> listeners) {
+        this(new GameConfiguration(playerOpt, diceOpt, boardOpt, hitOpt, endOpt, listeners));
+    }
+
     public void playGame() {
         Player winner = null;
         boolean gameOver = false;
@@ -85,7 +95,5 @@ public class GameEngine {
         if (winner != null) {
             System.out.println("\n🏆 Winner: " + winner.getColorCode() + winner.getName() + "\u001B[0m");
         }
-
     }
-
 }

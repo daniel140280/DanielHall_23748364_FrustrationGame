@@ -2,6 +2,8 @@ package rungame;
 
 import board.GameBoard;
 import dice.DiceShaker;
+import factories.gateway.*;
+import gameconfig.*;
 import gameobserver.GameListener;
 import gamestrategies.EndStrategy;
 import gamestrategies.HitStrategy;
@@ -33,6 +35,25 @@ public class GameConfiguration {
         this.listeners = listeners;
     }
 
+    //Convenience Constructor
+    /*
+    This constructor uses the gateways/adapters to build the concrete instantiations of
+    Player[], GameBoard, DiceShaker, HitStrategy, and EndStrategy from the enums.
+    That way, you can declare simulations transparently.
+     */
+    public GameConfiguration(PlayerOption playerOpt,
+                             DiceOption diceOpt,
+                             BoardOption boardOpt,
+                             HitOption hitOpt,
+                             EndOption endOpt,
+                             List<GameListener> listeners) {
+        this.players = PlayerFactoryGateway.createPlayers(playerOpt);
+        this.board = BoardFactoryGateway.createBoard(boardOpt);
+        this.dice = DiceFactoryGateway.createDice(diceOpt);
+        this.hitStrategy = HitFactoryGateway.createHitStrategy(hitOpt);
+        this.endStrategy = EndFactoryGateway.createEndStrategy(endOpt);
+        this.listeners = listeners;
+    }
 
     // Getters
     public Player[] getPlayers() {
