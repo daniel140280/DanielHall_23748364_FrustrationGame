@@ -33,6 +33,7 @@ public class RunGameSimulations {
                             //Print on the simulation scenario.
                             System.out.println("--------------Running simulation--------------\n");
                             System.out.printf("Game consists of %s players, %s dice, a %s board, the Hit strategy is %s and %s End strategy is played", playerOption, diceOption, boardOption, hitOption, endOption);
+                            System.out.println(); //Blank line added for improved visibility.
 
                             //Game simulations now constructed directly through Game set-up enums.
                             GameEngine engine = new GameEngine(playerOption, diceOption, boardOption, hitOption, endOption, listeners);

@@ -31,23 +31,35 @@ public class ObserverConsoleLogger implements GameListener{
     @Override
     public void onBlockedMove(Player player, PlayersInGameContext context, int attemptedPosition, int roll) {
         String message = String.format(
-                "%s rolled %d with the dice | and is blocked at position %d | move forfeited | total moves: %d",
-                player.getName(), roll, attemptedPosition, context.getMoveCount()
+                "%s rolled %d with the dice | and is blocked at position %d | move forfeited, hit another player | stays on position %s | total moves: %d",
+                player.getName(), roll, attemptedPosition, context.getPlayersPosition().toString(), context.getMoveCount()
         );
         System.out.println(ConsoleColor.consoleColor(message, player.getColorCode()));
+        //Update player history
+        context.getPlayersHistory().add("Move forfeited (hit), stays on " + context.getPlayersPosition().toString());
     }
     /**
      * Method to output when a player reaches or overshoots the end of the board.
      */
     @Override
-    public void onEndReached(Player player, PlayersInGameContext context, int attemptedPosition, int overshoot) {
-        String comment = overshoot == 0 ? "Landed exactly on the end" : "Made the end, but overshot by " + overshoot + " moves.";
-        String message = String.format(
-                "%s rolled %d with the dice | attempted to land on %d | %s | total moves: %d",
-                player.getName(), attemptedPosition - context.getStepsTaken(), attemptedPosition, comment, context.getMoveCount()
-        );
-
-        System.out.println(ConsoleColor.consoleColor(message, player.getColorCode()));
+    public void onEndReached(Player player, PlayersInGameContext context, int attemptedPosition, int overshoot, int roll) {
+        String message;
+        if(overshoot == 0) {
+            message = String.format(
+                    "%s rolled %d with the dice | landed exactly on the end at %s, so we have a winner | total moves: %d",
+                    player.getName(), roll, context.getPlayersPosition().toString(), context.getMoveCount()
+            );
+            //Update player history
+            context.getPlayersHistory().add("🎉 Reached end at " + context.getPlayersPosition().toString());
+        } else {
+            message = String.format(
+                    "%s rolled %d with the dice | Overshoot, so move forfeited and stay on %s | total moves: %d",
+                    player.getName(), roll, context.getPlayersPosition().toString(), context.getMoveCount()
+            );
+            //Update player history
+            context.getPlayersHistory().add("Overshoot. Move forfeited, stays on " + context.getPlayersPosition().toString());
+        }
+            System.out.println(ConsoleColor.consoleColor(message, player.getColorCode()));
     }
 
     @Override
@@ -56,9 +68,9 @@ public class ObserverConsoleLogger implements GameListener{
         for (Player player : players) {
             PlayersInGameContext context = contexts.get(player);
             System.out.println("\n" + player.getColorCode() + player.getName() + "\u001B[0m");
-            System.out.println("Moves made: " + context.getMoveCount());
-            System.out.println("Final position: " + context.getPlayersPosition());
-            System.out.println("Move history: " + context.getPlayersHistory().getAllMoves());
+            System.out.printf("Moves made: %d  | ", context.getMoveCount());
+            System.out.printf("Final position: %s | ", context.getPlayersPosition());
+            System.out.printf("Move history: %s", context.getPlayersHistory().getAllMoves());
         }
     }
 }

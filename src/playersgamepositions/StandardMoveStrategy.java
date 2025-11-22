@@ -35,21 +35,22 @@ public class StandardMoveStrategy implements MoveStrategy {
     @Override
     public void move(PlayersInGameContext context, int roll) {
         Player player = context.getPlayersPosition().getPlayer();
-        int currentIndex = context.getPlayersPosition().getBoardIndex();
-        int totalSteps = context.getStepsTaken() + roll;
+        int fromIndex = context.getPlayersPosition().getBoardIndex();
+        int stepsSoFar = context.getStepsTaken();
+        int totalSteps = stepsSoFar + roll;
         int proposedIndex;
 
         //Determine if player enters tail
         if(totalSteps < board.getBoardLength()){
             //Still on shared board, wrap around
-            proposedIndex = (currentIndex + roll) % board.getBoardLength();
+            proposedIndex = (fromIndex + roll) % board.getBoardLength();
         } else {
             //enter the tail - calculate the tail index
             int tailOffset = totalSteps - board.getBoardLength();
             proposedIndex = player.getTailStartIndex() + tailOffset;
             context.getPlayersPosition().setInTail(true);
         }
-        // Check if move is allowed
+        // Hit Strategy check - Check if move is allowed
         if (!hitStrategy.canMoveToPosition(player, proposedIndex, allPlayers)) {
             context.increaseMoveCount();
             for (GameListener listener : listeners) {
@@ -62,18 +63,18 @@ public class StandardMoveStrategy implements MoveStrategy {
         context.getPlayersPosition().setBoardIndex(proposedIndex);
         context.advanceStepsTaken(roll);
         context.increaseMoveCount();
-        context.getPlayersHistory().add("Moved to " + proposedIndex);
+//        context.getPlayersHistory().add("Moved to " + proposedIndex);
 
-        // Notify listeners
+        // End Strategy check - Did they reach the end?
         if (endStrategy.hasReachedEnd(player, proposedIndex)) {
             int overshoot = endStrategy.calculateOvershoot(player, proposedIndex);
             for (GameListener listener : listeners) {
-                listener.onEndReached(player, context, proposedIndex, overshoot);
+                listener.onEndReached(player, context, proposedIndex, overshoot, roll);
             }
-            context.getPlayersHistory().add("🎉 Reached end");
+//            context.getPlayersHistory().add("🎉 Reached end");
         } else {
             for (GameListener listener : listeners) {
-                listener.onSuccessfulMove(player, context, currentIndex, proposedIndex, roll);
+                listener.onSuccessfulMove(player, context, fromIndex, proposedIndex, roll);
             }
         }
     }
