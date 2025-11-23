@@ -69,9 +69,10 @@ public class GameEngine {
         while (!gameOver) {
             for (Player player : players) {
                 PlayersInGameContext context = playerContexts.get(player);
-                // Skip if player already finished (should have already stopped if so)
+                // Skip if player already finished (should have already stopped if so?)
+                int tailEndIndex = board.getBoardLength() + board.getTailEndLength() - 1;
                 if (context.getPlayersPosition().isInTail() &&
-                        context.getPlayersPosition().getBoardIndex() >= player.getTailEndIndex()) {
+                        context.getPlayersPosition().getBoardIndex() >= tailEndIndex) {
                     continue;
                 }
 
@@ -80,7 +81,7 @@ public class GameEngine {
 
                 // Winner check
                 if (context.getPlayersPosition().isInTail() &&
-                        context.getPlayersPosition().getBoardIndex() >= player.getTailEndIndex()) {
+                        context.getPlayersPosition().getBoardIndex() >= tailEndIndex) {
                     winner = player;
                     gameOver = true;
                     break;

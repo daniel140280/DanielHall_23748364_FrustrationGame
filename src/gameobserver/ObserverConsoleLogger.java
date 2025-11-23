@@ -24,6 +24,8 @@ public class ObserverConsoleLogger implements GameListener{
         );
         // Wrap the entire message in the player's color
         System.out.println(ConsoleColor.consoleColor(message, player.getColorCode()));
+        // record successful move in player move history
+        context.getPlayersHistory().add("Successful roll, moved to " + context.getPlayersPosition().toString());
     }
     /**
      * Method to output a 'hit' if a players move is blocked by another player.

@@ -21,6 +21,10 @@ public class StandardMoveStrategy implements MoveStrategy {
      * - Explicit modular wrap-around for shared board.
      * - Tail entry only after completing full lap (boardLength).
      * - EndStrategy calls with Player parameter.
+     *  * - Players now move clockwise around the shared board using modular arithmetic.
+     *  * - Tail entry only after completing a full lap (stepsTaken >= boardLength).
+     *  * - Overshoot only applies when reaching tail end.
+     *  * - Strategy decides outcome, listeners handle console output + history.
      */
 
     public StandardMoveStrategy(GameBoard board, HitStrategy hitStrategy, EndStrategy endStrategy,
@@ -39,15 +43,17 @@ public class StandardMoveStrategy implements MoveStrategy {
         int stepsSoFar = context.getStepsTaken();
         int totalSteps = stepsSoFar + roll;
         int proposedIndex;
+        int sharedBoardLength = board.getBoardLength();                 //18 or 36 positions depending on SMALL or LARGE gameboard.
 
         //Determine if player enters tail
-        if(totalSteps < board.getBoardLength()){
+        if(totalSteps < sharedBoardLength){
             //Still on shared board, wrap around
-            proposedIndex = (fromIndex + roll) % board.getBoardLength();
+            proposedIndex = (fromIndex + roll) % sharedBoardLength;
+            context.getPlayersPosition().setInTail(false);
         } else {
             //enter the tail - calculate the tail index
-            int tailOffset = totalSteps - board.getBoardLength();
-            proposedIndex = player.getTailStartIndex() + tailOffset;
+            int tailOffset = totalSteps - sharedBoardLength;
+            proposedIndex = sharedBoardLength + tailOffset;
             context.getPlayersPosition().setInTail(true);
         }
         // Hit Strategy check - Check if move is allowed
@@ -66,7 +72,8 @@ public class StandardMoveStrategy implements MoveStrategy {
 //        context.getPlayersHistory().add("Moved to " + proposedIndex);
 
         // End Strategy check - Did they reach the end?
-        if (endStrategy.hasReachedEnd(player, proposedIndex)) {
+        int tailEndIndex = board.getBoardLength() + board.getTailEndLength() -1;
+        if (endStrategy.hasReachedEnd(player, proposedIndex) && proposedIndex == tailEndIndex) {
             int overshoot = endStrategy.calculateOvershoot(player, proposedIndex);
             for (GameListener listener : listeners) {
                 listener.onEndReached(player, context, proposedIndex, overshoot, roll);

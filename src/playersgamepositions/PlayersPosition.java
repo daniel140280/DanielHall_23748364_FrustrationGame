@@ -10,6 +10,11 @@ Strategies will determine whether board positions are valid or forfeit.
 History will be kept to track game statistics.
 Observer will listen to position progress and print relevant information to the console.
  */
+/**
+ * SRP: Tracks runtime position only.
+ * Tail flag is set by strategy, not by Player or Board.
+ */
+
 public class PlayersPosition {
     private int boardIndex;                              //Tracking current board index based on the player in context.
     private boolean indexInTail;                         //Supporting whether player is in their tail position.
@@ -44,8 +49,14 @@ public class PlayersPosition {
 
     @Override
     public String toString() {
-        return indexInTail ? player.getName().charAt(0) + String.valueOf(boardIndex - player.getTailStartIndex() + 1) : String.valueOf(boardIndex);
+        return indexInTail
+                ? player.getName().charAt(0) + String.valueOf(boardIndex)
+                : String.valueOf(boardIndex);
     }
-
-
+    //helper for attempted positions
+//    public String positionString(int index) {
+//        return (index >= player.getTailStartIndex())
+//                ? player.getName().charAt(0) + String.valueOf(index - player.getTailStartIndex() + 1)
+//                : String.valueOf(index);
+//    }
 }

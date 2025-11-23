@@ -8,6 +8,10 @@ import gamestrategies.HitStrategy;
 
 import java.util.HashMap;
 import java.util.Map;
+/**
+ * Gateway for HitStrategy creation.
+ * Uses a registry of adapters keyed by HitOption.
+ */
 
 public class HitFactoryGateway {
     private static final Map<HitOption, HitFactory> hitRegistry = new HashMap<>();

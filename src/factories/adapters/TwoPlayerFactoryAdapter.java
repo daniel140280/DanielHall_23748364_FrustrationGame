@@ -1,6 +1,7 @@
 package factories.adapters;
 
 
+import board.GameBoard;
 import gameconfig.PlayerOption;
 import factories.PlayerFactory;
 import players.BluePlayer;

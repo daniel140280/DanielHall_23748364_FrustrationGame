@@ -1,5 +1,6 @@
 package factories.gateway;
 
+import board.GameBoard;
 import factories.EndFactory;
 import factories.adapters.ExactEndFactoryAdapter;
 import factories.adapters.OvershootEndFactoryAdapter;
@@ -17,12 +18,11 @@ public class EndFactoryGateway {
         endRegistry.put(EndOption.OVERSHOOT_ALLOWED, new OvershootEndFactoryAdapter());
     }
 
-    public static EndStrategy createEndStrategy(EndOption option) {
+    public static EndStrategy createEndStrategy(GameBoard board, EndOption option) {
         EndFactory factory = endRegistry.get(option);
         if (factory == null){
             throw new IllegalArgumentException("Unsupported EndOption: " + option);
         }
-        return factory.createEndStrategy(option);
+        return factory.createEndStrategy(board, option);
     }
-
 }

@@ -47,11 +47,11 @@ public class GameConfiguration {
                              HitOption hitOpt,
                              EndOption endOpt,
                              List<GameListener> listeners) {
-        this.players = PlayerFactoryGateway.createPlayers(playerOpt);
         this.board = BoardFactoryGateway.createBoard(boardOpt);
+        this.players = PlayerFactoryGateway.createPlayers(playerOpt);
         this.dice = DiceFactoryGateway.createDice(diceOpt);
         this.hitStrategy = HitFactoryGateway.createHitStrategy(hitOpt);
-        this.endStrategy = EndFactoryGateway.createEndStrategy(endOpt);
+        this.endStrategy = EndFactoryGateway.createEndStrategy(board, endOpt);
         this.listeners = listeners;
     }
 

@@ -1,5 +1,6 @@
 package factories;
 
+import board.GameBoard;
 import gameconfig.PlayerOption;
 import players.Player;
 /*

@@ -7,7 +7,7 @@ package players;
 public interface Player {
     String getName();                               //Player name.
     int getStartIndex();                            //Players starting position (index)
-    int getTailStartIndex();                        //Players starting tail position (index)
-    int getTailEndIndex();                          //Players ending tail position (index)
+//    int getTailStartIndex();                        //Players starting tail position (index)
+//    int getTailEndIndex();                          //Players ending tail position (index)
     String getColorCode();                          //ANSI colour code used for console output and improved visibility of player.
 }

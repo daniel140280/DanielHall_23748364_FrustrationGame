@@ -1,5 +1,6 @@
 package factories.gateway;
 
+import board.GameBoard;
 import gameconfig.PlayerOption;
 import factories.PlayerFactory;
 import factories.adapters.FourPlayerFactoryAdapter;
