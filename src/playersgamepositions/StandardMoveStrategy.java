@@ -18,13 +18,10 @@ public class StandardMoveStrategy implements MoveStrategy {
 
     /**
      * StandardMoveStrategy handles player movement around the shared board and into their own tail.
-     * - Explicit modular wrap-around for shared board.
-     * - Tail entry only after completing full lap (boardLength).
-     * - EndStrategy calls with Player parameter.
-     *  * - Players now move clockwise around the shared board using modular arithmetic.
-     *  * - Tail entry only after completing a full lap (stepsTaken >= boardLength).
-     *  * - Overshoot only applies when reaching tail end.
-     *  * - Strategy decides outcome, listeners handle console output + history.
+     * Players move clockwise around a shared board using modular arithmetic.
+     * Tail entry only happens AFTER completing full lap (boardLength).
+     * Overshoot only applies when reaching tail end.
+     * Strategy decides outcome, listeners handle console output + history.
      */
 
     public StandardMoveStrategy(GameBoard board, HitStrategy hitStrategy, EndStrategy endStrategy,

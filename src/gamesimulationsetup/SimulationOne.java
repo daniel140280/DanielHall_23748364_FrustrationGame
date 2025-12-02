@@ -1,20 +1,20 @@
 package gamesimulationsetup;
 
-import board.BoardEnums;
-import board.GameBoard;
-import boardfactory.GameBoardFactory;
-import dice.DiceEnums;
-import dice.DiceShaker;
-import dice.RandomDoubleDiceShaker;
-import gameobserver.GameListener;
-import gameobserver.ObserverConsoleLogger;
-import gamestrategies.RuleSet;
-import players.BluePlayer;
-import players.Player;
-import players.PlayerEnums;
-import players.RedPlayer;
-
-import java.util.List;
+//import board.BoardEnums;
+//import board.GameBoard;
+//import boardfactory.GameBoardFactory;
+//import dice.DiceEnums;
+//import dice.DiceShaker;
+//import dice.RandomDoubleDiceShaker;
+//import gameobserver.GameListener;
+//import gameobserver.ObserverConsoleLogger;
+//import gamestrategies.RuleSet;
+//import players.BluePlayer;
+//import players.Player;
+//import players.PlayerEnums;
+//import players.RedPlayer;
+//
+//import java.util.List;
 
 //public class SimulationOne implements GameSimulationFactory{
 //    @Override
