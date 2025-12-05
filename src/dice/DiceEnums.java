@@ -1,5 +1,5 @@
-package dice;
-
-public enum DiceEnums {
-    SINGLE, DOUBLE
-}
+//package dice;
+//
+//public enum DiceEnums {
+//    SINGLE, DOUBLE
+//}

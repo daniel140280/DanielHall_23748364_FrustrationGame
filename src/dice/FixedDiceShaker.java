@@ -37,8 +37,4 @@ public class FixedDiceShaker implements DiceShaker {
         lastRoll = rolls.poll();
         return lastRoll;
     }
-
-    public boolean hasMoreRolls() {
-        return !rolls.isEmpty() || repeatLast;
-    }
 }

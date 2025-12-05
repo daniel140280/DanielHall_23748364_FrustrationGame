@@ -54,7 +54,7 @@ public class StandardMoveStrategy implements MoveStrategy {
             proposedInTail = false;
             //context.getPlayersPosition().setInTail(false);
         } else {
-            //In tail or entering the tail - calculate the tail index
+            //In tail or entering the tail - calculate the tail index as linear section. No wrap around.
             int tailOffset = totalSteps - sharedBoardLength;
             proposedIndex = sharedBoardLength + tailOffset;
             proposedInTail = true;
@@ -67,6 +67,11 @@ public class StandardMoveStrategy implements MoveStrategy {
             context.increaseMoveCount();
 
             int overshoot = endStrategy.calculateOvershoot(player, proposedIndex);
+            if (proposedInTail) {
+                context.getPlayersPosition().setTailOffset(tailLength);
+                context.getPlayersPosition().setAtEnd(true);
+            }
+
             for(GameListener listener : listeners){
                 listener.onEndReached(player, context, proposedIndex, overshoot, roll);
             }
@@ -85,6 +90,17 @@ public class StandardMoveStrategy implements MoveStrategy {
         //4. Apply valid move and update the player state.
         context.getPlayersPosition().setBoardIndex(proposedIndex);
         context.getPlayersPosition().setInTail(proposedInTail);
+
+        if (proposedInTail) {
+            int appliedTailOffset = Math.min(totalSteps - sharedBoardLength, tailLength);
+            context.getPlayersPosition().setTailOffset(appliedTailOffset);
+            boolean atEnd = proposedIndex == tailEndIndex;
+            context.getPlayersPosition().setAtEnd(atEnd);
+        } else {
+            context.getPlayersPosition().setTailOffset(0);
+            context.getPlayersPosition().setAtEnd(false);
+        }
+
         context.advanceStepsTaken(roll);
         context.increaseMoveCount();
 //        context.getPlayersHistory().add("Moved to " + proposedIndex);
@@ -106,17 +122,4 @@ public class StandardMoveStrategy implements MoveStrategy {
         }
     }
 }
-
-//int tailEndIndex = board.getBoardLength() + board.getTailEndLength() -1;
-//        if (endStrategy.hasReachedEnd(player, proposedIndex) && proposedIndex == tailEndIndex) {
-//int overshoot = endStrategy.calculateOvershoot(player, proposedIndex);
-//            for (GameListener listener : listeners) {
-//        listener.onEndReached(player, context, proposedIndex, overshoot, roll);
-//            }
-////            context.getPlayersHistory().add("🎉 Reached end");
-//                    } else {
-//                    for (GameListener listener : listeners) {
-//        listener.onSuccessfulMove(player, context, fromIndex, proposedIndex, roll);
-//            }
-//                    }
 

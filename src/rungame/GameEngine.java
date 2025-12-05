@@ -31,6 +31,9 @@ public class GameEngine {
     private final List<GameListener> listeners;
     private final Map<Player, PlayersInGameContext> playerContexts = new LinkedHashMap<>();
     private final StandardMoveStrategy moveStrategy;
+    private Player winner;
+    public Player getWinner() { return winner; }
+
 
     public GameEngine(GameConfiguration config) {
         this.players = config.getPlayers();
@@ -66,36 +69,33 @@ public class GameEngine {
     }
 
     public void playGame() {
-        Player winner = null;
+        winner = null;
         boolean gameOver = false;
         while (!gameOver) {
             for (Player player : players) {
                 PlayersInGameContext context = playerContexts.get(player);
-                // Skip if player already finished (should have already stopped if so?)
-                int tailEndIndex = board.getBoardLength() + board.getTailEndLength() - 1;
-                if (context.getPlayersPosition().isInTail() &&
-                        context.getPlayersPosition().getBoardIndex() >= tailEndIndex) {
+                // Skip finished players
+                if (context.isFinished()) {
                     continue;
                 }
-
+                // Skip if player already finished (should have already stopped if so?)
+//                int tailEndIndex = board.getBoardLength() + board.getTailEndLength() - 1;
+//                if (context.getPlayersPosition().isInTail() &&
+//                        context.getPlayersPosition().getBoardIndex() >= tailEndIndex) {
+//                    continue;
+//                }
                 int roll = dice.shake();
                 moveStrategy.move(context, roll);
 
-                // Winner check
-//                if (context.getPlayersPosition().isInTail() &&
-//                        context.getPlayersPosition().getBoardIndex() >= tailEndIndex) {
-//                    winner = player;
-//                    gameOver = true;
-//                    break;
                 //Delegates win condition to the End Strategy to determine - SRP!
                 if (endStrategy.hasReachedEnd(player, context.getPlayersPosition().getBoardIndex())) {
+                    context.setFinished(true);
                     winner = player;
                     gameOver = true;
                     break;
                 }
             }
         }
-
         // Notify listeners
         for (GameListener listener : listeners) {
             listener.onGameOver(players, playerContexts);

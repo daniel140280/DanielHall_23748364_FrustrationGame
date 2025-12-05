@@ -31,6 +31,3 @@ public class PlayerFactoryGateway {
         return factory.createPlayers(option);
     }
 }
-
-
-

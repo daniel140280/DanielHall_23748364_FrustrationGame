@@ -1,5 +1,5 @@
-package board;
-
-public enum BoardEnums {
-    SMALL,LARGE
-}
+//package board;
+//
+//public enum BoardEnums {
+//    SMALL,LARGE
+//}

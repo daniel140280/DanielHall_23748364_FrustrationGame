@@ -6,12 +6,15 @@ public class PlayersInGameContext {
     private int moveCount;
     private int stepsTaken;
     private PlayersMoveHistory playersHistory;
+    private boolean finished;
+
 
     //PlayersInGameContext needs to understand the in game positions, moves attempted and history.
     public PlayersInGameContext(PlayersPosition playersPosition, PlayersMoveHistory playersMoveHistory){
         this.playersPosition = playersPosition;
         this.playersHistory = playersMoveHistory;
         this.stepsTaken = 0;
+        this.finished = false;
     }
 
     public PlayersPosition getPlayersPosition() {
@@ -41,8 +44,8 @@ public class PlayersInGameContext {
     public PlayersMoveHistory getPlayersHistory() {
         return playersHistory;
     }
-//
-//    public void setPlayersHistory(PlayersMoveHistory playersHistory) {
-//        this.playersHistory = playersHistory;
-//    }
+    public boolean isFinished() { return finished; }
+    public void setFinished(boolean finished) { this.finished = finished; }
+
+
 }

@@ -46,21 +46,39 @@ public class ObserverConsoleLogger implements GameListener{
     @Override
     public void onEndReached(Player player, PlayersInGameContext context, int attemptedPosition, int overshoot, int roll) {
         String message;
-        if(overshoot == 0) {
+        if(context.getPlayersPosition().isAtEnd() && overshoot == 0) {
+            //Exact landing on End
             message = String.format(
                     "%s rolled %d with the dice | landed exactly on the end at %s, so we have a winner | total moves: %d",
                     player.getName(), roll, context.getPlayersPosition().toString(), context.getMoveCount()
             );
             //Update player history
             context.getPlayersHistory().add("🎉 Reached end at " + context.getPlayersPosition().toString());
-        } else {
+        } else if (overshoot > 0 && !context.getPlayersPosition().isAtEnd()) {
+            //Overshoot, forfeited move
             message = String.format(
-                    "%s rolled %d with the dice | Overshoot, so move forfeited and stay on %s | total moves: %d",
+                    "%s rolled %d with the dice | Overshoot. Move forfeited, stay on %s | total moves: %d",
                     player.getName(), roll, context.getPlayersPosition().toString(), context.getMoveCount()
             );
-            //Update player history
             context.getPlayersHistory().add("Overshoot. Move forfeited, stays on " + context.getPlayersPosition().toString());
+        } else if (context.getPlayersPosition().isAtEnd() && overshoot > 0) {
+            // OvershootAllowedStrategy winner
+            message = String.format(
+                    "%s rolled %d | overshot but allowed, winner at %s | total moves: %d",
+                    player.getName(), roll, context.getPlayersPosition().toString(), context.getMoveCount()
+            );
+            context.getPlayersHistory().add("Reached end at " + context.getPlayersPosition().toString());
+        } else {
+            // Fallback
+            message = String.format(
+                    "%s rolled %d | end condition triggered at %s | total moves: %d",
+                    player.getName(), roll, context.getPlayersPosition().toString(), context.getMoveCount()
+            );
         }
+//
+//        //Update player history
+//            context.getPlayersHistory().add("Overshoot. Move forfeited, stays on " + context.getPlayersPosition().toString());
+//        }
             System.out.println(ConsoleColor.consoleColor(message, player.getColorCode()));
     }
 
