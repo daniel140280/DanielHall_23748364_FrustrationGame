@@ -27,6 +27,7 @@ public class GameEngine {
     private final Player[] players;
     private final GameBoard board;
     private final DiceShaker dice;
+    private final EndStrategy endStrategy;
     private final List<GameListener> listeners;
     private final Map<Player, PlayersInGameContext> playerContexts = new LinkedHashMap<>();
     private final StandardMoveStrategy moveStrategy;
@@ -35,6 +36,7 @@ public class GameEngine {
         this.players = config.getPlayers();
         this.board = config.getBoard();
         this.dice = config.getDice();
+        this.endStrategy = config.getEndStrategy();
         this.listeners = config.getListeners();
 
 
@@ -80,8 +82,13 @@ public class GameEngine {
                 moveStrategy.move(context, roll);
 
                 // Winner check
-                if (context.getPlayersPosition().isInTail() &&
-                        context.getPlayersPosition().getBoardIndex() >= tailEndIndex) {
+//                if (context.getPlayersPosition().isInTail() &&
+//                        context.getPlayersPosition().getBoardIndex() >= tailEndIndex) {
+//                    winner = player;
+//                    gameOver = true;
+//                    break;
+                //Delegates win condition to the End Strategy to determine - SRP!
+                if (endStrategy.hasReachedEnd(player, context.getPlayersPosition().getBoardIndex())) {
                     winner = player;
                     gameOver = true;
                     break;

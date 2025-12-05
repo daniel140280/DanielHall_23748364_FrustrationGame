@@ -1,7 +1,9 @@
-package gamestrategies;
+package test.gamestrategies;
 
 import board.GameBoard;
 import board.SmallGameBoard;
+import gamestrategies.EndStrategy;
+import gamestrategies.HitStrategy;
 import gamestrategies.endimplementations.ExactEndStrategy;
 import gamestrategies.endimplementations.OvershootAllowedStrategy;
 import gamestrategies.hitimplementations.AllowHitStrategy;
@@ -102,15 +104,15 @@ public class StrategyTest {
         allPlayers.put(bluePlayer, blueContext);
 
         // Red tries to move to empty position 7
-        assertTrue(strategy.canMoveToPosition(redPlayer, 7, allPlayers),
+        assertTrue(strategy.canMoveToPosition(redPlayer, 7, allPlayers, smallBoard),
                 "Should allow move to empty position");
 
         // Red tries to move to Blue's position 10
-        assertFalse(strategy.canMoveToPosition(redPlayer, 10, allPlayers),
+        assertFalse(strategy.canMoveToPosition(redPlayer, 10, allPlayers, smallBoard),
                 "Should block move to occupied position");
 
         // Blue can stay on own position
-        assertTrue(strategy.canMoveToPosition(bluePlayer, 10, allPlayers),
+        assertTrue(strategy.canMoveToPosition(bluePlayer, 10, allPlayers, smallBoard),
                 "Player can stay on own position");
     }
 
@@ -131,9 +133,9 @@ public class StrategyTest {
         allPlayers.put(redPlayer, redContext);
         allPlayers.put(bluePlayer, blueContext);
 
-        assertTrue(strategy.canMoveToPosition(redPlayer, 7, allPlayers),
+        assertTrue(strategy.canMoveToPosition(redPlayer, 7, allPlayers, smallBoard),
                 "Should allow move to empty position");
-        assertTrue(strategy.canMoveToPosition(redPlayer, 10, allPlayers),
+        assertTrue(strategy.canMoveToPosition(redPlayer, 10, allPlayers, smallBoard),
                 "Should allow move to occupied position");
     }
 }

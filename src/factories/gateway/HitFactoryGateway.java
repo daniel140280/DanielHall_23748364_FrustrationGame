@@ -13,6 +13,24 @@ import java.util.Map;
  * Uses a registry of adapters keyed by HitOption.
  */
 
+//public class HitFactoryGateway {
+//    private static final Map<HitOption, HitFactory> hitRegistry = new HashMap<>();
+//
+//    static {
+//        hitRegistry.put(HitOption.ALLOW, new AllowHitFactoryAdapter());
+//        hitRegistry.put(HitOption.FORBID, new ForbidHitFactoryAdapter());
+//    }
+//
+//    public static HitStrategy createHitStrategy(HitOption option) {
+//        HitFactory factory = hitRegistry.get(option);
+//        if (factory == null){
+//            throw new IllegalArgumentException("Unsupported HitOption: " + option);
+//        }
+//        return factory.createHitStrategy(option);
+//    }
+//
+//}
+
 public class HitFactoryGateway {
     private static final Map<HitOption, HitFactory> hitRegistry = new HashMap<>();
 
@@ -28,5 +46,4 @@ public class HitFactoryGateway {
         }
         return factory.createHitStrategy(option);
     }
-
 }

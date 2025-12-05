@@ -1,4 +1,4 @@
-package rungame;
+package test.rungame;
 
 import board.GameBoard;
 import board.SmallGameBoard;
@@ -18,6 +18,8 @@ import players.BluePlayer;
 import players.Player;
 import players.RedPlayer;
 import playersgamepositions.PlayersInGameContext;
+import rungame.GameConfiguration;
+import rungame.GameEngine;
 import test.mocks.MockGameListener;
 
 import org.junit.jupiter.api.Test;
