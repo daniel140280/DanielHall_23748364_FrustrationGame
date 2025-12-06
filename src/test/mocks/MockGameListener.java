@@ -15,7 +15,8 @@ import java.util.Map;
 public class MockGameListener implements GameListener {
     private final List<MoveEvent> successfulMoves = new ArrayList<>();
     private final List<MoveEvent> blockedMoves = new ArrayList<>();
-    private final List<EndEvent> endEvents = new ArrayList<>();
+    private final List<EndEvent> endReachedEvents = new ArrayList<>();
+    private final List<EndEvent> endForfeitEvents = new ArrayList<>(); // REQUIRED CHANGE: New list for forfeits
     private boolean gameOverCalled = false;
 
     @Override
@@ -34,9 +35,14 @@ public class MockGameListener implements GameListener {
     @Override
     public void onEndReached(Player player, PlayersInGameContext context,
                              int attemptedPosition, int overshoot, int roll) {
-        endEvents.add(new EndEvent(player, attemptedPosition, overshoot, roll));
+        endReachedEvents.add(new EndEvent(player, attemptedPosition, overshoot, roll));
     }
-
+    @Override
+    public void onEndForfeit(Player player, PlayersInGameContext context,
+                             int attemptedPosition, int overshoot, int roll) {
+        // AttemptedPosition is the index they would have landed on if allowed
+        endForfeitEvents.add(new EndEvent(player, attemptedPosition, overshoot, roll));
+    }
     @Override
     public void onGameOver(Player[] players, Map<Player, PlayersInGameContext> contexts) {
         gameOverCalled = true;
@@ -45,12 +51,14 @@ public class MockGameListener implements GameListener {
     // Verification methods
     public int getSuccessfulMoveCount() { return successfulMoves.size(); }
     public int getBlockedMoveCount() { return blockedMoves.size(); }
-    public int getEndEventCount() { return endEvents.size(); }
+    public int getEndEventCount() { return endReachedEvents.size(); }
+    public int getEndForfeitCount() { return endForfeitEvents.size(); }
     public boolean wasGameOverCalled() { return gameOverCalled; }
 
     public List<MoveEvent> getSuccessfulMoves() { return successfulMoves; }
     public List<MoveEvent> getBlockedMoves() { return blockedMoves; }
-    public List<EndEvent> getEndEvents() { return endEvents; }
+    public List<EndEvent> getEndReachedEvents() { return endReachedEvents; }
+    public List<EndEvent> getEndForfeitEvents() { return endForfeitEvents; }
 
     public MoveEvent getLastSuccessfulMove() {
         return successfulMoves.isEmpty() ? null : successfulMoves.get(successfulMoves.size() - 1);

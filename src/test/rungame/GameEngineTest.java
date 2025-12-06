@@ -80,7 +80,7 @@ public class GameEngineTest {
 
         // Verify Red won with exact landing
         assertEquals(1, listener.getEndEventCount(), "Should have exactly 1 end event");
-        MockGameListener.EndEvent endEvent = listener.getEndEvents().get(0);
+        MockGameListener.EndEvent endEvent = listener.getEndReachedEvents().get(0);
         assertEquals("Red", endEvent.player.getName(), "Red should win");
         assertEquals(0, endEvent.overshoot, "Should have no overshoot (exact landing)");
         assertTrue(listener.wasGameOverCalled(), "Game over should be called");
@@ -119,9 +119,11 @@ public class GameEngineTest {
         }
 
         // Verify overshoot was detected
-        boolean foundOvershoot = listener.getEndEvents().stream()
+        boolean foundOvershoot = listener.getEndReachedEvents().stream()
                 .anyMatch(e -> e.player.getName().equals("Red") && e.overshoot > 0);
         assertTrue(foundOvershoot, "Should detect Red's overshoot forfeit");
+
+
     }
 
     @Test
@@ -151,14 +153,14 @@ public class GameEngineTest {
         engine.playGame();
 
         // Count overshoot forfeits
-        long overshootCount = listener.getEndEvents().stream()
+        long overshootCount = listener.getEndReachedEvents().stream()
                 .filter(e -> e.overshoot > 0)
                 .count();
         assertTrue(overshootCount >= 2, "Should have at least 2 overshoot forfeits");
 
         // Verify final win was exact
-        MockGameListener.EndEvent finalEnd = listener.getEndEvents().get(
-                listener.getEndEvents().size() - 1
+        MockGameListener.EndEvent finalEnd = listener.getEndReachedEvents().get(
+                listener.getEndReachedEvents().size() - 1
         );
         assertEquals("Red", finalEnd.player.getName());
         assertEquals(0, finalEnd.overshoot, "Final win should have no overshoot");
@@ -193,7 +195,7 @@ public class GameEngineTest {
 
         // Verify Red won with overshoot
         assertEquals(1, listener.getEndEventCount(), "Should have 1 end event");
-        MockGameListener.EndEvent endEvent = listener.getEndEvents().get(0);
+        MockGameListener.EndEvent endEvent = listener.getEndReachedEvents().get(0);
         assertEquals("Red", endEvent.player.getName(), "Red should win");
         assertEquals(2, endEvent.overshoot, "Should report overshoot of 2");
         assertTrue(listener.wasGameOverCalled(), "Game over should be called");
@@ -223,7 +225,7 @@ public class GameEngineTest {
         engine.playGame();
 
         // Verify win with large overshoot
-        MockGameListener.EndEvent endEvent = listener.getEndEvents().get(0);
+        MockGameListener.EndEvent endEvent = listener.getEndReachedEvents().get(0);
         assertEquals("Red", endEvent.player.getName());
         assertTrue(endEvent.overshoot >= 4, "Should have large overshoot");
     }
@@ -251,7 +253,7 @@ public class GameEngineTest {
         GameEngine engine = new GameEngine(config);
         engine.playGame();
 
-        MockGameListener.EndEvent endEvent = listener.getEndEvents().get(0);
+        MockGameListener.EndEvent endEvent = listener.getEndReachedEvents().get(0);
         assertEquals(0, endEvent.overshoot, "Exact landing should have no overshoot");
     }
 

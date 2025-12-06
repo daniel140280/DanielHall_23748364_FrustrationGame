@@ -22,6 +22,13 @@ public class StandardMoveStrategy implements MoveStrategy {
      * Tail entry only happens AFTER completing full lap (boardLength).
      * Overshoot only applies when reaching tail end.
      * Strategy decides outcome, listeners handle console output + history.
+     *  * Responsibilities:
+     *  * 1. Calculate proposed position
+     *  * 2. Validate move using strategies
+     *  * 3. Apply move or forfeit
+     *  * 4. Notify listeners
+     *  *
+     *  * Does NOT handle formatting or display logic.
      */
 
     public StandardMoveStrategy(GameBoard board, HitStrategy hitStrategy, EndStrategy endStrategy,
@@ -42,12 +49,11 @@ public class StandardMoveStrategy implements MoveStrategy {
         int tailLength = board.getTailEndLength();
         int tailEndIndex = sharedBoardLength + tailLength - 1;
 
-        //Calculating the proposed position
+        //1. Calculating the proposed position (hypothetical state depending on strategy applied)
         int totalSteps = stepsSoFar + roll;                             //calculates hypothetical new total distance.
         int proposedIndex;
         boolean proposedInTail;
 
-        //1. Calculate proposed position (hypothetical state depending on strategy applied)
         if(totalSteps < sharedBoardLength){
             //Still on shared board, wrap around
             proposedIndex = (fromIndex + roll) % sharedBoardLength;
@@ -61,23 +67,30 @@ public class StandardMoveStrategy implements MoveStrategy {
 //            context.getPlayersPosition().setInTail(proposedInTail);
 //            context.getPlayersPosition().setInTail(true);
         }
-        //2. End Strategy check - check if move would overshoot (strategy dependent) before applying move with correct parameters
+        //2. Validate move using End Strategy - determines if overshoot allowed (strategy dependent) before applying move with correct parameters
         if(!endStrategy.isValidMove(player,fromIndex,roll,sharedBoardLength,tailLength,stepsSoFar)){
-            //Move overshoots - forfeit
+            //Move overshoots - forfeit (ExactEndStrategy only)
             context.increaseMoveCount();
 
             int overshoot = endStrategy.calculateOvershoot(player, proposedIndex);
-            if (proposedInTail) {
-                context.getPlayersPosition().setTailOffset(tailLength);
-                context.getPlayersPosition().setAtEnd(true);
-            }
 
-            for(GameListener listener : listeners){
-                listener.onEndReached(player, context, proposedIndex, overshoot, roll);
+            for (GameListener listener : listeners) {
+                listener.onEndForfeit(player, context, proposedIndex, overshoot, roll);
             }
-            return; //Stop, do not apply move or check collisions.
+            return; //Overshoot forfeit, don't apply move
         }
-        //3. Hit Strategy check - Check if move is allowed
+
+//          MORNING  if (proposedInTail) {
+//                context.getPlayersPosition().setTailOffset(tailLength);
+//                context.getPlayersPosition().setAtEnd(true);
+//            }
+//
+//            for(GameListener listener : listeners){
+//                listener.onEndReached(player, context, proposedIndex, overshoot, roll);
+//            }
+//            return; //Stop, do not apply move or check collisions.
+
+        //3. Validate move using Hit Strategy - check if move is allowed (only on the shared board)
         if (!proposedInTail && !hitStrategy.canMoveToPosition(player, proposedIndex, allPlayers, this.board)) {
             //Hit another player, forfeit go.
             context.increaseMoveCount();
@@ -87,31 +100,50 @@ public class StandardMoveStrategy implements MoveStrategy {
             return; //Stop, collision detected.
         }
 
-        //4. Apply valid move and update the player state.
+        //4. Apply valid move and update the player position state.
         context.getPlayersPosition().setBoardIndex(proposedIndex);
         context.getPlayersPosition().setInTail(proposedInTail);
-
-        if (proposedInTail) {
-            int appliedTailOffset = Math.min(totalSteps - sharedBoardLength, tailLength);
-            context.getPlayersPosition().setTailOffset(appliedTailOffset);
-            boolean atEnd = proposedIndex == tailEndIndex;
-            context.getPlayersPosition().setAtEnd(atEnd);
-        } else {
-            context.getPlayersPosition().setTailOffset(0);
-            context.getPlayersPosition().setAtEnd(false);
-        }
-
         context.advanceStepsTaken(roll);
         context.increaseMoveCount();
+
+//        MORNINGif (proposedInTail) {
+//            int appliedTailOffset = Math.min(totalSteps - sharedBoardLength, tailLength);
+//            context.getPlayersPosition().setTailOffset(appliedTailOffset);
+//            boolean atEnd = proposedIndex == tailEndIndex;
+//            context.getPlayersPosition().setAtEnd(atEnd);
+//        } else {
+//            context.getPlayersPosition().setTailOffset(0);
+//            context.getPlayersPosition().setAtEnd(false);
+//        }
+
+
 //        context.getPlayersHistory().add("Moved to " + proposedIndex);
 
-        //5. End Strategy check - Did they reach the end?
+        //5. Validate End Strategy win condition - did a player reach the end?
 //        int tailEndIndex = board.getBoardLength() + board.getTailEndLength() -1;
         if (endStrategy.hasReachedEnd(player, proposedIndex)) {
             //Player has WON!
+//            if (proposedIndex > tailEndIndex) {
+//                context.getPlayersPosition().setBoardIndex(tailEndIndex);
+//            }
+//            int overshoot = endStrategy.calculateOvershoot(player, proposedIndex);
+//            for (GameListener listener : listeners) {
+//                listener.onEndReached(player, context, proposedIndex, overshoot, roll);
+//            }
+            // >>> REQUIRED CHANGE START
+            // Player has WON!
+
+            // Ensure the position is capped at the actual tail end index for display purposes,
+            // even if the proposedIndex calculation was higher (due to overshoot).
+            // This caps the visual position to "REnd".
+            int finalIndexForWin = Math.min(proposedIndex, tailEndIndex);
+            context.getPlayersPosition().setBoardIndex(finalIndexForWin);
+            context.getPlayersPosition().setInTail(true); // Must be in tail to win
+
             int overshoot = endStrategy.calculateOvershoot(player, proposedIndex);
             for (GameListener listener : listeners) {
-                listener.onEndReached(player, context, proposedIndex, overshoot, roll);
+                // Notifies that the player won (either exact land or allowed overshoot)
+                listener.onEndReached(player, context, finalIndexForWin, overshoot, roll);
             }
 //            context.getPlayersHistory().add("🎉 Reached end");
         } else {

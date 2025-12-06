@@ -91,11 +91,11 @@ public class StrategyTest {
     public void testForfeitOnHit() {
         HitStrategy strategy = new ForfeitOnHitStrategy();
 
-        PlayersPosition redPos = new PlayersPosition(redPlayer);
+        PlayersPosition redPos = new PlayersPosition(redPlayer, smallBoard);
         redPos.setBoardIndex(5);
         PlayersInGameContext redContext = new PlayersInGameContext(redPos, new PlayersMoveHistory());
 
-        PlayersPosition bluePos = new PlayersPosition(bluePlayer);
+        PlayersPosition bluePos = new PlayersPosition(bluePlayer, smallBoard);
         bluePos.setBoardIndex(10);
         PlayersInGameContext blueContext = new PlayersInGameContext(bluePos, new PlayersMoveHistory());
 
@@ -121,11 +121,11 @@ public class StrategyTest {
     public void testAllowHit() {
         HitStrategy strategy = new AllowHitStrategy();
 
-        PlayersPosition redPos = new PlayersPosition(redPlayer);
+        PlayersPosition redPos = new PlayersPosition(redPlayer,smallBoard);
         redPos.setBoardIndex(5);
         PlayersInGameContext redContext = new PlayersInGameContext(redPos, new PlayersMoveHistory());
 
-        PlayersPosition bluePos = new PlayersPosition(bluePlayer);
+        PlayersPosition bluePos = new PlayersPosition(bluePlayer,smallBoard);
         bluePos.setBoardIndex(10);
         PlayersInGameContext blueContext = new PlayersInGameContext(bluePos, new PlayersMoveHistory());
 
