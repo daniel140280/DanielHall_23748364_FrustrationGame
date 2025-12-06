@@ -34,12 +34,7 @@ public class GameEngine {
     private Player winner;
     public Player getWinner() { return winner; }
 
-    /**
-     * GameEngine runs the game loop.
-     * Accepts GameConfiguration (DIP, SOLID).
-     * - Winner tracking added.
-     * - Tail check requires isInTail() AND >= tailEndIndex.
-     */
+
     public GameEngine(GameConfiguration config) {
         this.players = config.getPlayers();
         this.board = config.getBoard();
@@ -83,16 +78,11 @@ public class GameEngine {
                 if (context.isFinished()) {
                     continue;
                 }
-                // Skip if player already finished (should have already stopped if so?)
-//                int tailEndIndex = board.getBoardLength() + board.getTailEndLength() - 1;
-//                if (context.getPlayersPosition().isInTail() &&
-//                        context.getPlayersPosition().getBoardIndex() >= tailEndIndex) {
-//                    continue;
-//                }
+
                 int roll = dice.shake();
                 moveStrategy.move(context, roll);
-// REQUIRED CHANGE: Only check win condition if move was successful and player hasn't forfeited.
-                //Delegates win condition to the End Strategy to determine - SRP!
+                // Only check win condition if move was successful and player hasn't forfeited.
+                // Delegates win condition to the End Strategy to determine - SRP!
                 if (endStrategy.hasReachedEnd(player, context.getPlayersPosition().getBoardIndex())) {
                     context.setFinished(true);
                     winner = player;

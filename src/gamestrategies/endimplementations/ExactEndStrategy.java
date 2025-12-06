@@ -7,10 +7,6 @@ import players.Player;
 /**
  * ExactEndStrategy requires players to land exactly on their tail end.
  * End logic uses GameBoard lengths, not Player indices.
- * Players must land exactly on their tail end.
- */
-/**
- * ExactEndStrategy requires players to land exactly on their tail end.
  */
 public class ExactEndStrategy implements EndStrategy {
     private final GameBoard board;
@@ -37,8 +33,6 @@ public class ExactEndStrategy implements EndStrategy {
         int proposedTotalSteps = stepsTaken + roll;
         int tailEndIndex = boardLength + tailLength - 1;
 
-        // WHY: If proposedTotalSteps > tailEndIndex, move overshoots = INVALID for exact strategy
-        // If proposedTotalSteps <= tailEndIndex, move is valid (including exact landing)
         return proposedTotalSteps <= tailEndIndex;
 
     }

@@ -11,7 +11,6 @@ import java.util.Map;
 public class AllowHitStrategy implements HitStrategy {
     @Override
     public boolean canMoveToPosition(Player currentPlayer, int targetIndex, Map<Player, PlayersInGameContext> allPlayers, GameBoard board) {
-        // Always allow move. Board param included for interface consistency.
-        return true;
+        return true; // Always allow move.
     }
 }

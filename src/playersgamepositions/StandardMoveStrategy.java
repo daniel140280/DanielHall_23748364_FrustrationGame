@@ -64,8 +64,6 @@ public class StandardMoveStrategy implements MoveStrategy {
             int tailOffset = totalSteps - sharedBoardLength;
             proposedIndex = sharedBoardLength + tailOffset;
             proposedInTail = true;
-//            context.getPlayersPosition().setInTail(proposedInTail);
-//            context.getPlayersPosition().setInTail(true);
         }
         //2. Validate move using End Strategy - determines if overshoot allowed (strategy dependent) before applying move with correct parameters
         if(!endStrategy.isValidMove(player,fromIndex,roll,sharedBoardLength,tailLength,stepsSoFar)){
