@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Fixed dice shaker for deterministic testing.
+ * Fixed dice shaker for fixed scenario testing and avoidance of random dice.
  * Returns predetermined sequence of rolls.
  */
 public class FixedDiceShaker implements DiceShaker {

@@ -14,7 +14,7 @@ public interface GameListener {
      */
     void onEndReached(Player player, PlayersInGameContext context, String fromPosition, String toPosition, int overshoot, int roll);
     /**
-     * REQUIRED CHANGE: Method to output when a player overshoots with a strategy that forbids it (forfeit).
+     * Method to output when a player overshoots with a strategy that forbids it (forfeit).
      */
     void onEndForfeit(Player player, PlayersInGameContext context, String fromPosition, int overshoot, int roll);
     void onGameOver(Player[] players, Map<Player, PlayersInGameContext> contexts, int totalGameMoves);

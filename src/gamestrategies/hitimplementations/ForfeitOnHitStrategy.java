@@ -25,7 +25,7 @@ public class ForfeitOnHitStrategy implements HitStrategy {
         // Only check collisions on shared board
         for (Map.Entry<Player, PlayersInGameContext> entry : allPlayers.entrySet()) {
             Player other = entry.getKey();
-            if (other.equals(currentPlayer)) continue;  // Skip self
+            if (other.equals(currentPlayer)) continue;
 
             int otherIndex = entry.getValue().getPlayersPosition().getBoardIndex();
 

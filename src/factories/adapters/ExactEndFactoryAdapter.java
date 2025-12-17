@@ -9,7 +9,7 @@ import gamestrategies.endimplementations.ExactEndStrategy;
 public class ExactEndFactoryAdapter implements EndFactory {
     @Override
     public EndStrategy createEndStrategy(GameBoard board, EndOption option) {
-        return new ExactEndStrategy(board);         //inject board (BEAN?!?)
+        return new ExactEndStrategy(board);
     }
 }
 

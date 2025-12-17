@@ -24,12 +24,11 @@ public class OvershootAllowedStrategy implements EndStrategy {
     @Override
     public int calculateOvershoot(Player player, int currentIndex) {
         int tailEndIndex = board.getBoardLength() + board.getTailEndLength() - 1;
-        // CORRECT: Calculate actual overshoot
         return Math.max(0, currentIndex - tailEndIndex);
     }
 
     @Override
     public boolean isValidMove(Player player, int currentIndex, int roll, int boardLength, int tailLength, int stepsTaken) {
-        return true;         // Always valid since overshoot is ALLOWED
+        return true;
     }
 }

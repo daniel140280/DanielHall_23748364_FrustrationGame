@@ -24,12 +24,11 @@ public class ExactEndStrategy implements EndStrategy {
     @Override
     public int calculateOvershoot(Player player, int currentIndex) {
         int tailEndIndex = board.getBoardLength() + board.getTailEndLength() - 1;
-        return Math.max(0, currentIndex - tailEndIndex); // Cannot overshoot in exact end strategy. Return actual overshoot amount, not 0.
+        return Math.max(0, currentIndex - tailEndIndex);
     }
 
     @Override
     public boolean isValidMove(Player player, int currentIndex, int roll, int boardLength, int tailLength, int stepsTaken) {
-        // Check proposed position would overshoot.
         int proposedTotalSteps = stepsTaken + roll;
         int tailEndIndex = boardLength + tailLength - 1;
 

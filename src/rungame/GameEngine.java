@@ -85,7 +85,6 @@ public class GameEngine {
                 totalGameMoves ++;
                 moveStrategy.move(context, roll);
                 // Only check win condition if move was successful and player hasn't forfeited.
-                // Delegates win condition to the End Strategy to determine - SRP!
                 if (endStrategy.hasReachedEnd(player, context.getPlayersPosition().getBoardIndex())) {
                     context.setFinished(true);
                     winner = player;

@@ -8,7 +8,6 @@ import gamestrategies.hitimplementations.ForfeitOnHitStrategy;
 
 
 public class ForbidHitFactoryAdapter implements HitFactory {
-//    private final GameBoard board;
 
     public ForbidHitFactoryAdapter(){
     };

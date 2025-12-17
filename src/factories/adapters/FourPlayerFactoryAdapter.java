@@ -10,5 +10,4 @@ public class FourPlayerFactoryAdapter implements PlayerFactory {
     public Player[] createPlayers(PlayerOption option) {
         return new Player[]{ new RedPlayer(), new BluePlayer(), new GreenPlayer(), new YellowPlayer() };
     }
-
 }
