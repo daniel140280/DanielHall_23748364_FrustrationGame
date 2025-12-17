@@ -33,6 +33,7 @@ public class GameEngine {
     private final StandardMoveStrategy moveStrategy;
     private Player winner;
     public Player getWinner() { return winner; }
+    private int totalGameMoves = 0;
 
 
     public GameEngine(GameConfiguration config) {
@@ -71,6 +72,7 @@ public class GameEngine {
     public void playGame() {
         winner = null;
         boolean gameOver = false;
+        totalGameMoves = 0;
         while (!gameOver) {
             for (Player player : players) {
                 PlayersInGameContext context = playerContexts.get(player);
@@ -80,6 +82,7 @@ public class GameEngine {
                 }
 
                 int roll = dice.shake();
+                totalGameMoves ++;
                 moveStrategy.move(context, roll);
                 // Only check win condition if move was successful and player hasn't forfeited.
                 // Delegates win condition to the End Strategy to determine - SRP!
@@ -93,7 +96,7 @@ public class GameEngine {
         }
         // Notify listeners
         for (GameListener listener : listeners) {
-            listener.onGameOver(players, playerContexts);
+            listener.onGameOver(players, playerContexts, totalGameMoves);
         }
         if (winner != null) {
             System.out.println("\n🏆 Winner: " + winner.getColorCode() + winner.getName() + "\u001B[0m");

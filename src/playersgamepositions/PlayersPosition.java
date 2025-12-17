@@ -74,27 +74,28 @@ public class PlayersPosition {
     @Override
     public String toString() {
         if (!indexInTail) {
-            return String.valueOf(boardIndex);
+            if(boardIndex == player.getStartIndex()){
+                return "Home (position " + (boardIndex +1) + ")";
+            }
+            return "position " + (boardIndex + 1);
+//            return String.valueOf(boardIndex);
         }
         // In tail - format as "R1", "R2", "REnd"
         String initial = player.getName().substring(0, 1);
-
-        // Calculate tail position (1-indexed for display)
-        // boardIndex 18 (small) = tail pos 1, boardIndex 19 = tail pos 2
-        // boardIndex 36 (large) = tail pos 1, boardIndex 37 = tail pos 2
-        int tailPosition = boardIndex - boardLength + 1;  // ✅ FIXED: Correct calculation
+        int tailPosition = boardIndex - boardLength + 1;  // FIXED: Correct calculation
 
         // Check if at final tail position
-        int finalTailPosition = tailLength;
+//        int finalTailPosition = tailLength;
 
-        if (tailPosition >= finalTailPosition) {
+        if (tailPosition >= tailLength) {
             return initial + "End";
         }
-
-        return initial + tailPosition;
+        return "Tail position " + (initial + tailPosition);
     }
 }
 //        MORNING String initial = player.getName().substring(0,1);
 //        return atEnd ? initial + "End" : initial + tailOffset;
 //    }
-
+// Calculate tail position (1-indexed for display)
+// boardIndex 18 (small) = tail pos 1, boardIndex 19 = tail pos 2
+// boardIndex 36 (large) = tail pos 1, boardIndex 37 = tail pos 2

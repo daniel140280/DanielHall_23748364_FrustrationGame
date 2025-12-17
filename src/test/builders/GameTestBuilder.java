@@ -47,7 +47,7 @@ public class GameTestBuilder {
     }
 
     public GameTestBuilder withDiceRolls(Integer... rolls) {
-        this.dice = new FixedDiceShaker(rolls);
+        this.dice = new FixedDiceShaker(rolls).withRepeatLast();
         return this;
     }
 
