@@ -10,5 +10,4 @@ public class AllowHitFactoryAdapter implements HitFactory {
     public HitStrategy createHitStrategy(HitOption option) {
         return new AllowHitStrategy();
     }
-
 }

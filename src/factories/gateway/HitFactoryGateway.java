@@ -28,5 +28,4 @@ public class HitFactoryGateway {
         }
         return factory.createHitStrategy(option);
     }
-
 }

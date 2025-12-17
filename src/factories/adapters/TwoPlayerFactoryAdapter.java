@@ -8,7 +8,6 @@ import players.BluePlayer;
 import players.Player;
 import players.RedPlayer;
 
-// Adapter for TWO players
 public class TwoPlayerFactoryAdapter implements PlayerFactory {
     @Override
     public Player[] createPlayers(PlayerOption option) {

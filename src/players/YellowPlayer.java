@@ -8,14 +8,13 @@ import playersgamepositions.PlayersInGameContext;
  * No tail logic here.
  */
 
-public class RedPlayer implements Player{
-    private final String name = "Red";
-    private final int startIndex = 0;               //Always starts at same index regardless of board size.
-    private final String colorCode = "\u001B[31m";  //Red colour.
+public class YellowPlayer implements Player{
+    private final String name = "Yellow";
+    private final int startIndex = 27;               //Always starts at same index regardless of board size.
 
+    private final String colorCode = "\u001B[33m";  //Yellow colour.
 
-    public RedPlayer(){
-
+    public YellowPlayer(){
     }
     @Override
     public String getName() {
@@ -25,9 +24,11 @@ public class RedPlayer implements Player{
     public int getStartIndex() {
         return startIndex;
     }
+
     @Override
     public String getColorCode() {
         return colorCode;
     }
 
 }
+

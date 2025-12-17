@@ -1,5 +1,6 @@
 package playersgamepositions;
 
+import board.GameBoard;
 import players.Player;
 
 import java.util.Objects;
@@ -12,51 +13,59 @@ Observer will listen to position progress and print relevant information to the 
  */
 /**
  * SRP: Tracks runtime position only.
- * Tail flag is set by strategy, not by Player or Board.
+ *  Does NOT handle game logic or strategy decisions.
  */
 
 public class PlayersPosition {
-    private int boardIndex;                              //Tracking current board index based on the player in context.
-    private boolean indexInTail;                         //Supporting whether player is in their tail position.
+    private int boardIndex;                             // Tracking current board index based on the player in context.
+    private boolean indexInTail;                        // Supporting whether player is in their tail position.
     private final Player player;
+    private final int boardLength;
+    private final int tailLength;
 
-    public PlayersPosition(Player player){
+    public PlayersPosition(Player player, GameBoard board){
         this.player = player;
         this.boardIndex = player.getStartIndex();       //When a player is created, we automatically assign their starting board index position.
         this.indexInTail = false;
+        this.boardLength = board.getBoardLength();
+        this.tailLength = board.getTailEndLength();
     }
 
     //Methods to manage the Players game moves depending on game strategies applied.
     public int getBoardIndex() {
         return boardIndex;
     }
-
     public void setBoardIndex(int boardIndex) {
         this.boardIndex = boardIndex;
     }
-
     public boolean isInTail() {
         return indexInTail;
     }
-
     public void setInTail(boolean inTail) {
         this.indexInTail = inTail;
     }
-
     public Player getPlayer() {
         return player;
     }
 
+
+    /**
+     * Calculates tail offset dynamically from boardIndex
+     */
     @Override
     public String toString() {
-        return indexInTail
-                ? player.getName().charAt(0) + String.valueOf(boardIndex)
-                : String.valueOf(boardIndex);
+        if (!indexInTail) {
+            if(boardIndex == player.getStartIndex()){
+                return "Home (position " + (boardIndex +1) + ")";
+            }
+            return "position " + (boardIndex + 1);
+        }
+        String initial = player.getName().substring(0, 1);
+        int tailPosition = boardIndex - boardLength + 1;
+
+        if (tailPosition >= tailLength) {
+            return initial + "End";
+        }
+        return "Tail position " + (initial + tailPosition);
     }
-    //helper for attempted positions
-//    public String positionString(int index) {
-//        return (index >= player.getTailStartIndex())
-//                ? player.getName().charAt(0) + String.valueOf(index - player.getTailStartIndex() + 1)
-//                : String.valueOf(index);
-//    }
 }

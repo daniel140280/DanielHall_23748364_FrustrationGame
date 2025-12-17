@@ -1,6 +1,5 @@
 package factories.adapters;
 
-import board.BoardEnums;
 import board.GameBoard;
 import board.SmallGameBoard;
 import gameconfig.BoardOption;

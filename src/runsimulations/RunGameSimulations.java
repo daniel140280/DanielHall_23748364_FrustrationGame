@@ -3,7 +3,7 @@ package runsimulations;
 import gameconfig.*;
 import gameobserver.GameListener;
 import gameobserver.ObserverConsoleLogger;
-import gamesimulationsetup.GameSimulationFactory;
+//import gamesimulationsetup.GameSimulationFactory;
 
 import rungame.GameConfiguration;
 import rungame.GameEngine;
@@ -47,13 +47,3 @@ public class RunGameSimulations {
         }
     }
 }
-
-
-// Single configuration passed to engine
-//GameConfiguration config = new GameConfiguration(players, board, dice, endStrategy, hitStrategy, listeners);
-//GameEngine engine = new GameEngine(config);
-//        engine.playGame();
-//GameSimulationFactory factory = new BasicTwoPlayerSimulation();
-//GameConfiguration config = factory.createConfiguration();
-//GameEngine engine = new GameEngine(config);
-//        engine.playGame();
