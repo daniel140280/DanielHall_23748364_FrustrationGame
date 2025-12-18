@@ -8,8 +8,15 @@ public class RunGame {
 //        new RunGameSimulations().runAllGameSimulations();
 
         ScenarioRunner runner = new ScenarioRunner();
-        runner.runScenarioOne();
+        runner.runScenarioOneA();
+        runner.runScenarioOneB();
         runner.runScenarioTwo();
+        runner.runScenarioThree();
+        runner.runScenarioFour();
+        runner.runScenarioFive();
+        runner.runScenarioSix();
+        runner.runScenarioSeven();
+        runner.runScenarioEight();
 
         System.out.println("All Done");
     }
