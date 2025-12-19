@@ -90,4 +90,12 @@ public class ObserverConsoleLogger implements GameListener{
                     winner.getName(), contexts.get(winner).getMoveCount(), totalGameMoves);
         }
     }
+    /**
+     * Method to output game state transitions.
+     */
+    @Override
+    public void onStateTransition(String oldState, String newState){
+        String message = String.format("\nGAME STATE : %s -> %s", oldState, newState);
+        System.out.println(ConsoleColor.consoleColor(message, "\u001B[35m"));
+    }
 }

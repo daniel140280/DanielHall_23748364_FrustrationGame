@@ -4,6 +4,7 @@ import board.GameBoard;
 import dice.DiceShaker;
 import gameconfig.*;
 import gameobserver.GameListener;
+import gamestate.GameState;
 import gamestrategies.EndStrategy;
 import gamestrategies.HitStrategy;
 import players.Player;
@@ -11,6 +12,9 @@ import playersgamepositions.PlayersInGameContext;
 import playersgamepositions.PlayersMoveHistory;
 import playersgamepositions.PlayersPosition;
 import playersgamepositions.StandardMoveStrategy;
+import gamestate.GameState;
+import gamestate.ReadyState;
+import gamestate.GameOverState;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -31,9 +35,12 @@ public class GameEngine {
     private final List<GameListener> listeners;
     private final Map<Player, PlayersInGameContext> playerContexts = new LinkedHashMap<>();
     private final StandardMoveStrategy moveStrategy;
+    private GameState state;
     private Player winner;
     public Player getWinner() { return winner; }
     private int totalGameMoves = 0;
+    private final int MAX_MOVES = 100; //This is a safeguard against potential infinite loops where exact end game is played with 2 dice.
+
 
 
     public GameEngine(GameConfiguration config) {
@@ -58,7 +65,45 @@ public class GameEngine {
                 listeners,
                 playerContexts
         );
+        this.state = new ReadyState();
     }
+    /**
+     * Context method to handle state transitions
+     */
+    public void setGameState(GameState newState){
+        String oldStateName = (this.state == null) ? "START" : this.state.toString();
+        this.state = newState;
+
+        //Notification of state change via listeners
+        for(GameListener listener : listeners) {
+            listener.onStateTransition(oldStateName, newState.toString());
+        }
+    }
+    /**
+     * Method to handle moves, whereby the GameEngine asks the State 'what should it do with the dice roll?'.
+     */
+    public void takeTurn(PlayersInGameContext context, int roll) {
+        state.handleDiceRoll(this, context, roll);
+    }
+
+    /**
+     * Method used by the InPlay state to validate moveStrategy.
+     * StandardMoveStrategy will be set to finished if that is the case.
+     */
+    public void executeMoveLogic(PlayersInGameContext context, int roll) {
+        moveStrategy.move(context, roll);
+    }
+
+
+//    // The States need this to trigger your move logic
+//    public StandardMoveStrategy getMoveStrategy() {
+//        return this.moveStrategy;
+//    }
+//
+//    // The ReadyState needs this to call handleMove again after transitioning
+//    public GameState getGameState() {
+//        return this.state;
+//    }
 
     public GameEngine(PlayerOption playerOpt,
                       DiceOption diceOpt,
@@ -71,27 +116,30 @@ public class GameEngine {
 
     public void playGame() {
         winner = null;
-        boolean gameOver = false;
         totalGameMoves = 0;
-        while (!gameOver) {
+
+        // Loop continues until State Machine hits Game Over or maxMove safety limit is reached.
+        while (!(state instanceof GameOverState) && totalGameMoves < MAX_MOVES) {
             for (Player player : players) {
                 PlayersInGameContext context = playerContexts.get(player);
-                // Skip finished players
-                if (context.isFinished()) {
+                if (context.isFinished()){
                     continue;
                 }
 
                 int roll = dice.shake();
-                totalGameMoves ++;
-                moveStrategy.move(context, roll);
-                // Only check win condition if move was successful and player hasn't forfeited.
-                if (endStrategy.hasReachedEnd(player, context.getPlayersPosition().getBoardIndex())) {
-                    context.setFinished(true);
+                totalGameMoves++;
+
+                this.takeTurn(context, roll);
+
+                if (context.isFinished()) {
                     winner = player;
-                    gameOver = true;
                     break;
                 }
             }
+        }
+        if (totalGameMoves >= MAX_MOVES && winner == null) {
+            System.out.println("\nGame terminated: Reached maximum move limit of " + MAX_MOVES);
+            this.setGameState(new GameOverState());
         }
         // Notify listeners
         for (GameListener listener : listeners) {
@@ -100,5 +148,49 @@ public class GameEngine {
         if (winner != null) {
             System.out.println("\n🏆 Winner: " + winner.getColorCode() + winner.getName() + "\u001B[0m");
         }
+        // Demonstrating that extra rolls after game won, prints "Game Over" state
+        System.out.println("\n[Test of Game state if inducing an extra roll after win]");
+        this.takeTurn(playerContexts.get(players[0]), 6);
     }
 }
+
+//------------------------------
+//public void playGame() {
+//    // First checking the game state is over.
+//    if (state instanceof GameOverState) {
+//        state.handleMove(this, null, 0);
+//        return;
+//    }
+//
+//    winner = null;
+//    boolean gameOver = false;
+//    totalGameMoves = 0;
+//    while (!gameOver) {
+//        for (Player player : players) {
+//            PlayersInGameContext context = playerContexts.get(player);
+//            // Skip finished players
+//            if (context.isFinished()) {
+//                continue;
+//            }
+//
+//            int roll = dice.shake();
+//            totalGameMoves ++;
+//            state.handleMove(this, context, roll);
+////                moveStrategy.move(context, roll);
+//            // Only check win condition if move was successful and player hasn't forfeited.
+//            if (endStrategy.hasReachedEnd(player, context.getPlayersPosition().getBoardIndex())) {
+//                context.setFinished(true);
+//                winner = player;
+//                gameOver = true;
+//                break;
+//            }
+//        }
+//    }
+//    // Notify listeners
+//    for (GameListener listener : listeners) {
+//        listener.onGameOver(players, playerContexts, totalGameMoves);
+//    }
+//    if (winner != null) {
+//        System.out.println("\n🏆 Winner: " + winner.getColorCode() + winner.getName() + "\u001B[0m");
+//    }
+//}

@@ -18,7 +18,7 @@ public interface GameListener {
      */
     void onEndForfeit(Player player, PlayersInGameContext context, String fromPosition, int overshoot, int roll);
     void onGameOver(Player[] players, Map<Player, PlayersInGameContext> contexts, int totalGameMoves);
-
+    void onStateTransition(String oldState, String newState);
 }
 
 

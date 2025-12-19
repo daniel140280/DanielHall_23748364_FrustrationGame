@@ -9,9 +9,7 @@ import gamestrategies.EndStrategy;
 import gamestrategies.HitStrategy;
 import gamestrategies.endimplementations.ExactEndStrategy;
 import gamestrategies.hitimplementations.ForfeitOnHitStrategy;
-import players.BluePlayer;
-import players.Player;
-import players.RedPlayer;
+import players.*;
 import rungame.GameConfiguration;
 import rungame.GameEngine;
 
@@ -24,7 +22,7 @@ import java.util.List;
  */
 public class GameTestBuilder {
     private GameBoard board = new SmallGameBoard();
-    private Player[] players = new Player[]{ new RedPlayer(), new BluePlayer() };
+    private Player[] players = new Player[]{ new RedPlayer(), new BluePlayer(), new GreenPlayer(), new YellowPlayer()};
     private DiceShaker dice = new FixedDiceShaker(1, 1, 1, 1);
     private EndStrategy endStrategy;
     private HitStrategy hitStrategy;
