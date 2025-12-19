@@ -154,6 +154,18 @@ public class ScenarioRunner {
                 .buildAndPlay();
     }
 
+    public void runScenarioNine() {
+        System.out.println("\n=== STATE MACHINE FEATURE - BASIC GAME : SCENARIO 9: Blue Wins (Dice Roll sequence - 12,12,7,8,12,12) ===");
+
+        new GameTestBuilder()
+                .withBoard(new SmallGameBoard())
+                .withPlayers(new RedPlayer(), new BluePlayer())
+                .withDiceRolls(12,12,7,8,12,12)
+                .withHitStrategy(new AllowHitStrategy())
+                .withEndStrategy(new OvershootAllowedStrategy(new SmallGameBoard()))
+                .addListener(new ObserverConsoleLogger())
+                .buildAndPlay();
+    }
 }
 
 
